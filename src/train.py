@@ -12,5 +12,5 @@ def load_and_validate_data(data_path: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = load_and_validate_data("data/sentiments.csv")
+    df = load_and_validate_data("sentiments.csv")
     print(df.head())
