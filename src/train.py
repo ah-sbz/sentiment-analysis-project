@@ -31,13 +31,13 @@ def split_data(
             df["text"],
             df["label"],
             test_size=0.2,
-            random_state=7,
+            random_state=42,
             stratify=df["label"],
         )
     except ValueError:
         # Fallback if stratification fails (e.g., on very small datasets)
         X_train, X_test, y_train, y_test = train_test_split(
-            df["text"], df["label"], test_size=0.2, random_state=7
+            df["text"], df["label"], test_size=0.2, random_state=42
         )
     return X_train, X_test, y_train, y_test
 
