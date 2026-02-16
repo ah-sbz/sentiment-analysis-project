@@ -65,6 +65,6 @@ evaluation/evaluation_results/
 .streamlit/secrets.toml
 
 # ML artifacts
-#models/*.joblib
+models/*.joblib
 models/*.pkl
 models/*.pickle
