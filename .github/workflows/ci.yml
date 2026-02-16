@@ -31,4 +31,5 @@ jobs:
                 pip install -r requirements.txt
             - name: Run the predict script
               run: |
+                python src/train.py --data data/train.csv --out models/sentiment.joblib
                 python src/predict.py "What a beautiful day!"
