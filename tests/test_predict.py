@@ -7,17 +7,14 @@ def model():
     return load_model("models/sentiment.joblib")
 
 
-def test_obvious_positive_sentence(model):
-    preds, probs = predict_texts(
-        model, ["I love this movie, it was fantastic and inspiring!"]
-    )
-    assert preds[0] == 1
-    assert probs[0] is None or 0.0 <= probs[0] <= 1.0
-
-
-def test_obvious_negative_sentence(model):
-    preds, probs = predict_texts(
-        model, ["The service was terrible and the food was awful."]
-    )
-    assert preds[0] == 0
+@pytest.mark.parametrize(
+    ("text", "expected_label"),
+    [
+        ("I love this movie, it was fantastic and inspiring!", 1),
+        ("The service was terrible and the food was awful.", 0),
+    ],
+)
+def test_predict_obvious_sentiment(model, text, expected_label):
+    preds, probs = predict_texts(model, [text])
+    assert preds[0] == expected_label
     assert probs[0] is None or 0.0 <= probs[0] <= 1.0
