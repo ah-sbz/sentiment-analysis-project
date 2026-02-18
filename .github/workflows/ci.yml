@@ -5,17 +5,22 @@ on:
         paths:
             - "src/**"
             - "data/**"
+            - "tests/**"
             - "requirements.txt"
+            - "pyproject.toml"
             - ".github/workflows/**"
     pull_request:
         paths:
             - "src/**"
             - "data/**"
+            - "tests/**"
             - "requirements.txt"
+            - "pyproject.toml"
             - ".github/workflows/**"
 
 jobs:
-    run-predict:
+
+    lint-and-format:
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
@@ -29,7 +34,27 @@ jobs:
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
-            - name: Run the predict script
+            - name: Run ruff linting check
               run: |
-                python src/train.py --data data/sentiments.csv --out models/sentiment.joblib
-                python src/predict.py "What a beautiful day!"
+                ruff check .
+            - name: Run ruff format check
+              run: |
+                ruff format . --check
+    run-predict:
+      runs-on: ubuntu-latest
+      timeout-minutes: 10
+      steps:
+          - name: Check out repository
+            uses: actions/checkout@v4
+          - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+              python-version: 3.11
+          - name: Install dependencies
+            run: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+          - name: Run the predict script
+            run: |
+              python src/train.py --data data/sentiments.csv --out models/sentiment.joblib
+              python src/predict.py "What a beautiful day!"
