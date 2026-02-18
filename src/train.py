@@ -43,8 +43,8 @@ def split_data(
 def train_model(X_train: pd.Series, y_train: pd.Series) -> Pipeline:
     """Builds and trains a classification pipeline."""
     clf_pipeline = make_pipeline(
-        TfidfVectorizer(min_df=1, ngram_range=(1, 2)),
-        LogisticRegression(max_iter=1000),
+        TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5)),
+        LogisticRegression(max_iter=1000, C=5.0),
     )
     clf_pipeline.fit(X_train, y_train)
     return clf_pipeline
