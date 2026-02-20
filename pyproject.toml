@@ -23,7 +23,7 @@ quote-style = "double"
 docstring-code-format = true
 
 [tool.mypy]
-mypy_path=./src:./tests
+mypy_path = "./src:./tests"
 strict = true
 warn_unused_ignores = true
 show_error_codes = true
