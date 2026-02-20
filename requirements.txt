@@ -1,5 +1,9 @@
 joblib==1.2.0
+joblib-stubs==1.5.3.1.20260117
+mypy==1.19.1
 pandas==2.2.2
+pandas-stubs==3.0.0.260204
 pytest==9.0.2
 ruff==0.15.1
 scikit-learn==1.7.1
+scikit-learn-stubs==0.0.3
