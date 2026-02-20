@@ -51,6 +51,19 @@ Example:
 0	0.015	That was awful
 ```
 
+## Model Quality Gate
+
+The test suite includes a performance gate in `tests/test_predict.py`:
+- It loads the trained model.
+- It evaluates on `data/test.csv`.
+- It computes binary F1-score (`sklearn.metrics.f1_score`).
+- CI fails if F1 is below `MIN_F1 = 0.65`.
+
+Why `0.65` and not `0.85`:
+- The current dataset is intentionally small, so a high absolute threshold is unstable.
+- The gate is used to catch regressions in CI/CD flow, not to represent final model quality.
+- You can raise `MIN_F1` later as data quality/size improves.
+
 ## CI And Production Variables/Secrets
 
 Use this split:
