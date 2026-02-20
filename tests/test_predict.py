@@ -3,7 +3,7 @@ from typing import Any
 
 import pytest
 from dotenv import load_dotenv
-from src.predict import load_model, predict_texts
+from src.predict import load_model, predict_texts, resolve_model_path
 
 load_dotenv()
 
@@ -11,6 +11,11 @@ load_dotenv()
 @pytest.fixture(scope="module")
 def model() -> Any:
     return load_model(os.getenv("MODEL_PATH", "models/sentiment.joblib"))
+
+
+def test_resolve_model_path_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MODEL_PATH", "models/custom-sentiment.joblib")
+    assert resolve_model_path() == "models/custom-sentiment.joblib"
 
 
 @pytest.mark.parametrize(

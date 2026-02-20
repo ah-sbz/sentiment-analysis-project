@@ -10,6 +10,12 @@ from joblib import load
 from numpy.typing import NDArray
 
 load_dotenv()
+DEFAULT_MODEL_PATH = "models/sentiment.joblib"
+
+
+def resolve_model_path() -> str:
+    """Return model path from env, falling back to default project path."""
+    return os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
 
 
 def load_model(model_path: str) -> Any:
@@ -53,7 +59,7 @@ def main(model_path: str, input_texts: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    env_model_path = os.getenv("MODEL_PATH", "models/sentiment.joblib")
+    env_model_path = resolve_model_path()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model",
