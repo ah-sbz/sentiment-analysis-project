@@ -13,12 +13,15 @@ COPY requirements-docker.txt .
 RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements-docker.txt
 
-# Copy application assets
+# Copy both entry points (CLI + API) and model assets
 COPY src/predict.py src/predict.py
+COPY src/predict_api.py src/predict_api.py
 COPY models/ models/
 
-# Fixed command
-ENTRYPOINT [ "python", "src/predict.py" ]
+# API listens on this container port
+EXPOSE 8000
 
-# Default input texts
-CMD ["I absolutely loved it", "That was awful"]
+# Default container mode: run FastAPI service
+# To use CLI instead, override command at runtime:
+# docker run --rm <image> python src/predict.py "I loved it" "Terrible movie"
+CMD ["uvicorn", "src.predict_api:app", "--host", "0.0.0.0", "--port", "8000"]

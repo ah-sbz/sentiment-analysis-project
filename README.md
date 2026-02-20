@@ -112,12 +112,25 @@ Build image:
 docker build -t sentiment-analysis-app:latest .
 ```
 
-Run with default model path (from image/filesystem):
+Run API (default container command):
 ```bash
-docker run --rm sentiment-analysis-app:latest "I absolutely loved it" "That was awful"
+docker run --rm -p 8000:8000 sentiment-analysis-app:latest
 ```
 
-Override model path with env var at runtime:
+Call the API from host:
 ```bash
-docker run --rm -e MODEL_PATH=models/sentiment.joblib sentiment-analysis-app:latest "Great movie"
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["I absolutely loved it", "That was awful"]}'
+```
+
+Run CLI from the same image by overriding the command:
+```bash
+docker run --rm sentiment-analysis-app:latest \
+  python src/predict.py "I absolutely loved it" "That was awful"
+```
+
+Override model path with env var at runtime (API or CLI):
+```bash
+docker run --rm -e MODEL_PATH=models/sentiment.joblib -p 8000:8000 sentiment-analysis-app:latest
 ```
