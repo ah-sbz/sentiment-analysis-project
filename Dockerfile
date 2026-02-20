@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Layers 3&4: Copy the requirements file and install dependencies
 COPY requirements.txt .
+RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Layers 5&6: Copy local project files into the container
