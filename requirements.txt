@@ -1,3 +1,5 @@
+fastapi==0.129.0
+httpx==0.28.1
 joblib==1.2.0
 joblib-stubs==1.5.3.1.20260117
 mypy==1.19.1
@@ -8,3 +10,4 @@ python-dotenv==1.0.1
 ruff==0.15.2
 scikit-learn==1.7.1
 scikit-learn-stubs==0.0.3
+uvicorn==0.41.0
