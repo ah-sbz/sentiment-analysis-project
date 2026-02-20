@@ -18,6 +18,7 @@ def predict_texts(
 ) -> tuple[list[int], list[float | None]]:
     """Return labels and probability-of-positive for each text."""
     preds: NDArray[Any] = classifier.predict(input_texts)
+    probs: list[float | None]
     if hasattr(classifier, "predict_proba"):
         probs_arr: NDArray[np.float64] = classifier.predict_proba(input_texts)[:, 1]
         probs = [float(p) for p in probs_arr.tolist()]
