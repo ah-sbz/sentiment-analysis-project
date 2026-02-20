@@ -51,6 +51,28 @@ Example:
 0	0.015	That was awful
 ```
 
+## Predict API (FastAPI)
+
+Run the API:
+```bash
+uvicorn src.predict_api:app --host 127.0.0.1 --port 8000 --reload
+```
+
+Send a request:
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["I absolutely loved it", "That was awful"]}'
+```
+
+Example response:
+```json
+[
+  {"text": "I absolutely loved it", "label": 1, "probability": 0.98},
+  {"text": "That was awful", "label": 0, "probability": 0.02}
+]
+```
+
 ## Model Quality Gate
 
 The test suite includes a performance gate in `tests/test_predict.py`:
