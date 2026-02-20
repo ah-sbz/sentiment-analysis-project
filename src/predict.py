@@ -1,11 +1,15 @@
 """CLI and helper functions for sentiment model inference."""
 
 import argparse
+import os
 from typing import Any
 
 import numpy as np
+from dotenv import load_dotenv
 from joblib import load
 from numpy.typing import NDArray
+
+load_dotenv()
 
 
 def load_model(model_path: str) -> Any:
@@ -49,8 +53,14 @@ def main(model_path: str, input_texts: list[str]) -> None:
 
 
 if __name__ == "__main__":
+    env_model_path = os.getenv("MODEL_PATH", "models/sentiment.joblib")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="models/sentiment.joblib")
+    parser.add_argument(
+        "--model",
+        default=env_model_path,
+        help="Path to model file (default: "
+        "MODEL_PATH env var or models/sentiment.joblib)",
+    )
     parser.add_argument("text", nargs="+", help="One or more texts to score")
     args = parser.parse_args()
     main(model_path=args.model, input_texts=args.text)

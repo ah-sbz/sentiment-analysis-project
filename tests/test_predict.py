@@ -1,12 +1,16 @@
+import os
 from typing import Any
 
 import pytest
+from dotenv import load_dotenv
 from src.predict import load_model, predict_texts
+
+load_dotenv()
 
 
 @pytest.fixture(scope="module")
 def model() -> Any:
-    return load_model("models/sentiment.joblib")
+    return load_model(os.getenv("MODEL_PATH", "models/sentiment.joblib"))
 
 
 @pytest.mark.parametrize(

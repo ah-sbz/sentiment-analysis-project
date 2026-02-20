@@ -61,6 +61,8 @@ jobs:
               python -m pip install --upgrade pip
               pip install -r requirements.txt
           - name: Run tests with pytest
+            env:
+              MODEL_PATH: ${{ vars.MODEL_PATH || 'models/sentiment.joblib' }}
             run: pytest -v
     build-and-push:
       runs-on: ubuntu-latest
@@ -78,6 +80,8 @@ jobs:
           - name: Build and (conditionally) push Docker image
             uses: docker/build-push-action@v5
             with:
+              build-args: |
+                MODEL_PATH=${{ vars.MODEL_PATH || 'models/sentiment.joblib' }}
               context: .
               push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
               tags: ${{ secrets.DOCKERHUB_USERNAME }}/sentiment-analysis-app:latest
