@@ -91,3 +91,56 @@ jobs:
               context: .
               push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
               tags: ${{ secrets.DOCKERHUB_USERNAME }}/sentiment-analysis-app:latest
+    notify:
+      needs: [ lint-and-format, test, build-and-push ]
+      if: always()
+      runs-on: ubuntu-latest
+      steps:
+        - name: Prepare notification context
+          id: context
+          run: |
+            RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              {
+                echo "meta<<EOF"
+                echo "Repo: ${{ github.repository }}"
+                echo "PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
+                echo "Branch: ${{ github.event.pull_request.head.ref }} -> ${{ github.event.pull_request.base.ref }}"
+                echo "Commit: ${{ github.event.pull_request.head.sha }}"
+                echo "Run: ${RUN_URL}"
+                echo "EOF"
+              } >> "$GITHUB_OUTPUT"
+            else
+              {
+                echo "meta<<EOF"
+                echo "Repo: ${{ github.repository }}"
+                echo "Ref: ${{ github.ref_name }}"
+                echo "Commit: ${{ github.sha }}"
+                echo "Run: ${RUN_URL}"
+                echo "EOF"
+              } >> "$GITHUB_OUTPUT"
+            fi
+        - name: Notify failure
+          if: ${{ contains(needs.*.result, 'failure') }}
+          run: |
+            curl \
+            -H "Title: CI/CD Workflow Failed" \
+            -H "Content-Type: text/plain" \
+            -d $'${{ steps.context.outputs.meta }}\nStatus: failure' \
+            ${{ secrets.NTFY_URL }}
+        - name: Notify cancelled
+          if: ${{ contains(needs.*.result, 'cancelled') }}
+          run: |
+            curl \
+            -H "Title: CI/CD Workflow Cancelled" \
+            -H "Content-Type: text/plain" \
+            -d $'${{ steps.context.outputs.meta }}\nStatus: cancelled' \
+            ${{ secrets.NTFY_URL }}
+        - name: Notify success
+          if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+          run: |
+            curl \
+            -H "Title: CI/CD Workflow Successful" \
+            -H "Content-Type: text/plain" \
+            -d $'${{ steps.context.outputs.meta }}\nStatus: success' \
+            ${{ secrets.NTFY_URL }}
