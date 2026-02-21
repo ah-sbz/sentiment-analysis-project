@@ -129,7 +129,7 @@ jobs:
             -H "Title: CI/CD Workflow Failed" \
             -H "Content-Type: text/plain" \
             -d $'${{ steps.context.outputs.meta }}\nStatus: failure' \
-            -H "Click: ${{ step.context.outputs.run_url }}" \
+            -H "Click: ${{ steps.context.outputs.run_url }}" \
             ${{ secrets.NTFY_URL }}
         - name: Notify cancelled
           if: ${{ contains(needs.*.result, 'cancelled') }}
@@ -140,7 +140,7 @@ jobs:
             -H "Title: CI/CD Workflow Cancelled" \
             -H "Content-Type: text/plain" \
             -d $'${{ steps.context.outputs.meta }}\nStatus: cancelled' \
-            -H "Click: ${{ step.context.outputs.run_url }}" \
+            -H "Click: ${{ steps.context.outputs.run_url }}" \
             ${{ secrets.NTFY_URL }}
         - name: Notify success
           if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
@@ -151,5 +151,5 @@ jobs:
             -H "Title: CI/CD Workflow Successful" \
             -H "Content-Type: text/plain" \
             -d $'${{ steps.context.outputs.meta }}\nStatus: success' \
-            -H "Click: ${{ step.context.outputs.run_url }}" \
+            -H "Click: ${{ steps.context.outputs.run_url }}" \
             ${{ secrets.NTFY_URL }}
